@@ -1,10 +1,10 @@
 from threading import Thread
 from numpy import ndarray, zeros, dstack, uint8
-from ultralytics.data.utils import IMG_FORMATS, VID_FORMATS
 from time import sleep
 import os
 import cv2
-# from torch import from_numpy, flip
+IMG_FORMATS = {'bmp', 'dib', 'jpeg', 'jpg', 'jpe', 'jp2', 'png', 'pbm', 'pgm', 'ppm', 'sr', 'ras', 'tiff', 'tif'}
+VID_FORMATS = {'avi', 'mp4', 'mov', 'mkv', 'flv', 'wmv', 'webm', 'vob', 'ogv', 'ogg', 'gif', 'm4v', 'mpg', 'mpeg', 'm2v', '3gp', '3g2'}
 CAPTURE = 0
 IMAGE = 1
 NEXT = 0
