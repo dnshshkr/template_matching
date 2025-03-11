@@ -22,8 +22,15 @@ data = {
 def trigger_callback(*args):
     global data
     image = global_live_image.copy()
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if len(image.shape) == 3 else image
-    score = max(0, cv2.minMaxLoc(cv2.matchTemplate(gray, template, cv2.TM_CCOEFF_NORMED))[1])
+    # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) if len(image.shape) == 3 else image
+    # score = max(0, cv2.minMaxLoc(cv2.matchTemplate(gray, template, cv2.TM_CCOEFF_NORMED))[1])
+    template_hsv = cv2.cvtColor(template, cv2.COLOR_BGR2HSV)
+    frame_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    hist_template = cv2.calcHist([template_hsv], [0, 1, 2], None, [50, 60, 60], [0, 180, 0, 256, 0, 256])
+    hist_frame = cv2.calcHist([frame_hsv], [0, 1, 2], None, [50, 60, 60], [0, 180, 0, 256, 0, 256])
+    cv2.normalize(hist_template, hist_template, 0, 1, cv2.NORM_MINMAX)
+    cv2.normalize(hist_frame, hist_frame, 0, 1, cv2.NORM_MINMAX)
+    score = cv2.compareHist(hist_template, hist_frame, cv2.HISTCMP_CORREL)
     status = score >= OK_THRESHOLD
     gpio.gpio_write(h, GPIO_OK_PIN, status)
     gpio.gpio_write(h, GPIO_NG_PIN, not status)
